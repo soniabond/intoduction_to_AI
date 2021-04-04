@@ -92,14 +92,18 @@ def generateAnswer():
     countryProducer = comboCountryProducer.get()
     brand = comboBrand.get()
     typeCosmetic = comboType.get()
+    print(typeCosmetic)
     if validateVariables(minPrice, maxPrice, partOfFace, countryProducer, brand, typeCosmetic):
-        items = repository.findSpecificCosmeticItems(minPrice, maxPrice, partOfFace, countryProducer, brand,
-                                         typeCosmetic)
-        infoPanel.insert(INSERT, "Item we can propose\n")
+        items = repository.findSpecificCosmeticItems(minPrice, maxPrice, partOfFace, countryProducer, brand, typeCosmetic)
+       # infoPanel.insert(INSERT, "Item we can propose\n")
         if items == []:
             infoPanel.insert(INSERT, "no item found")
         else:
-            infoPanel.insert(INSERT, items)
+            renderItems = list()
+            for i in range(items.__len__()):
+                newItem = StringVar()
+                newItem.set(items[i]+"\n")
+                infoPanel.insert(INSERT, newItem.get())
 
 
 btnGetCosmeticItems = Button(window, text="get cosmetic recommendations", command=generateAnswer)

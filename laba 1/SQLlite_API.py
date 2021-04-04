@@ -74,7 +74,8 @@ class CosmeticDataRepository:
         if type == "":
             type_id = "(select type_id from type_item)"
         else:
-            type_id = "("+ str(self.findTypeOfCosmeticByName(type)) + ")"
+            type_id = "(" + str(self.findTypeOfCosmeticByName(type)) + ")"
+            print(type_id)
         if brand == "":
             brand_id = "(select id from brand)"
         else:
@@ -89,7 +90,7 @@ class CosmeticDataRepository:
             partOfFace_id = "("+self.findPartOfFaceIdByName(partOfFace).__str__()+")"
         statement = "select distinct cosmetic_items.title from cosmetic_items, type_item where price between ? and ? and brand_id in " + brand_id.__str__() + " and country_producer_id in " + countryProducer_id.__str__() + " and part_of_face_id in " + partOfFace_id.__str__() + " and type_item.type_id in " + type_id.__str__()
         print(statement)
-        self.cursor.execute("select distinct cosmetic_items.title from cosmetic_items, type_item where price between ? and ? and brand_id in " + brand_id.__str__() + " and country_producer_id in " + countryProducer_id.__str__() + " and part_of_face_id in " + partOfFace_id.__str__() + " and type_item.type_id in " + type_id.__str__(), (minPrice, maxPrice,))
+        self.cursor.execute("select distinct cosmetic_items.title from cosmetic_items, type_item where price between ? and ? and brand_id in " + brand_id.__str__() + " and country_producer_id in " + countryProducer_id.__str__() + " and part_of_face_id in " + partOfFace_id.__str__() + " and type_item.type_id in " + type_id.__str__() + " and type_item.item_id=id", (minPrice, maxPrice,))
         rows = self.cursor.fetchall()
         result = list()
         for i in range(len(rows)):
