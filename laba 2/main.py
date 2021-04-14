@@ -3,12 +3,17 @@ from random import *
 from tkinter import *
 
 
-eps = 0.000001
+eps = 0.0000001
 sign = 0
 
+# фитнесс функция  if count >= 1000 or math.fabs(fLast - f[0]) < eps. То есть  в случае
+# что модуль разности последнего наилучшего ресультата (значения функции) и нового результата
+# меньше заданного эпсилон - цель достигнула и алгоритм сошелся к эстремумуж. Или же если
+# количество итераций алгоритма достигло заданной константы - считаем, что алгоритм завнршился
+# неуспешно и надо менять параметры.
 
 def func(x):
-    return x + math.cos(math.radians(2*x))
+    return x + math.cos(2*x)
 
 
 def mutation(x0, x1):
@@ -32,10 +37,10 @@ def crossover(arrayX, x0, x1):
             k -= 1
 
     for i in range(8):
-        arrayX[k] = inversion(arrayX[i])
-        k -= 1
-        arrayX[k] = inversion(arrayX[i])
-        k -= 1
+         arrayX[k] = inversion(arrayX[i])
+         k -= 1
+         arrayX[k] = inversion(arrayX[i])
+         k -= 1
 
     for i in range(8, k):
         arrayX[i] = mutation(x0, x1)
@@ -47,7 +52,7 @@ def sort(x, y, size, reverse):
     for i in range(size):
         for j in range(size):
             if reverse:
-                if math.fabs(y[j]) > math.fabs(y[i]):
+                if y[j] > y[i]:
                     temp = y[i]
                     y[i] = y[j]
                     y[j] = temp
@@ -55,7 +60,7 @@ def sort(x, y, size, reverse):
                     x[i] = x[j]
                     x[j] = temp
             else:
-                if math.fabs(y[j]) < math.fabs(y[i]):
+                if y[j] < y[i]:
                     temp = y[i]
                     y[i] = y[j]
                     y[j] = temp
@@ -69,7 +74,7 @@ def genetic(x0, x1, extrKind):
     reverse = True
     if extrKind == "min":
         reverse = False
-    populationSize = 40
+    populationSize = 100
     population = list()
     f = list()
     count = 0
@@ -79,7 +84,6 @@ def genetic(x0, x1, extrKind):
 
     population, f = sort(population, f, populationSize, reverse)
     initSet = population.copy()
-    initSet = population[1: 30]
     fLast = f[0]
     while True:
         count += 1
@@ -87,12 +91,17 @@ def genetic(x0, x1, extrKind):
         for i in range(populationSize):
             f[i] = func(population[i])
         population, f = sort(population, f, populationSize, reverse)
-        if count >= 1000 or math.fabs(fLast - f[0]) < eps:
+        if count >= 10000 or math.fabs(fLast - f[0]) < eps:
             break
         fLast = f[0]
 
     return population[0], initSet
 
+def correctInsertTOInfoPanel(infoPanel, items):
+    for i in range(items.__len__()):
+        newItem = StringVar()
+        newItem.set(str(items[i]) + "\n")
+        infoPanel.insert(INSERT, newItem.get())
 
 def generateAnswer():
     x, vector = genetic(-2, 1, "max")
@@ -110,7 +119,8 @@ def generateAnswer():
     infoPanelMaxExtrY.insert(INSERT, y)
 
     infoPanelXVector.delete(1.0, END)
-    infoPanelXVector.insert(INSERT, vector)
+    correctInsertTOInfoPanel(infoPanelXVector, vector)
+    #infoPanelXVector.insert(INSERT, vector)
 
 
 window = Tk()
