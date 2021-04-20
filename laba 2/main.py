@@ -31,18 +31,18 @@ def inversion(x):
 
 def crossover(arrayX, x0, x1):
     k = 99
-    for i in range(8):
-        for j in range(i+1, 8):
+    for i in range(12):
+        for j in range(i+1, 12):
             arrayX[k] = (arrayX[i] + arrayX[j]) / 2
             k -= 1
 
-    for i in range(8):
+    for i in range(12):
          arrayX[k] = inversion(arrayX[i])
          k -= 1
          arrayX[k] = inversion(arrayX[i])
          k -= 1
 
-    for i in range(8, k):
+    for i in range(12, k):
         arrayX[i] = mutation(x0, x1)
 
     return arrayX
